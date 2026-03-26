@@ -21,15 +21,12 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install -r requirements.txt
-        pip install pytest
 
     - name: Run Tests (Exercise 14)
       run: pytest
 
     - name: SonarQube Scan (Exercise 13A)
       uses: SonarSource/sonarqube-scan-action@v2
-      with:
-        projectBaseDir: .
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
