@@ -28,16 +28,19 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('My Sonar Server') {
-                    sh '''
-                    source venv/bin/activate
-                    sonar-scanner
-                    '''
-                }
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('My Sonar Server') {
+            script {
+                def scannerHome = tool 'SonarScanner'
+                sh """
+                source venv/bin/activate
+                ${scannerHome}/bin/sonar-scanner
+                """
             }
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
