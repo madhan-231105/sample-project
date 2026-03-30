@@ -11,20 +11,30 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh '''
+                python -m venv venv
+                source venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'PYTHONPATH=. pytest'
+                sh '''
+                source venv/bin/activate
+                PYTHONPATH=. pytest
+                '''
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('My Sonar Server') {
-                    sh 'sonar-scanner'
+                    sh '''
+                    source venv/bin/activate
+                    sonar-scanner
+                    '''
                 }
             }
         }
