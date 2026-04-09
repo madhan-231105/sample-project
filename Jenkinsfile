@@ -28,41 +28,43 @@ pipeline {
             }
         }
 
-stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('My Sonar Server') {
-            script {
-                def scannerHome = tool 'SonarScanner'
-                sh """
-                source venv/bin/activate
-                ${scannerHome}/bin/sonar-scanner
-                """
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('My Sonar Server') {
+                    script {
+                        def scannerHome = tool 'SonarScanner'
+                        sh """
+                        source venv/bin/activate
+                        ${scannerHome}/bin/sonar-scanner
+                        """
+                    }
+                }
             }
         }
-    }
-}
 
-// stage('Quality Gate') {
-//     steps {
-//         timeout(time: 5, unit: 'MINUTES') {
-//             waitForQualityGate abortPipeline: true
-//         }
-//     }
-// }
+        // Optional (you commented correctly)
+        // stage('Quality Gate') {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t myapp:latest .'
             }
         }
-    }
-}
 
-stage('Deploy to Kubernetes') {
-    steps {
-        sh '''
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
-        '''
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+                '''
+            }
+        }
+
     }
 }
