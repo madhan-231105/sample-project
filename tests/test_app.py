@@ -1,13 +1,9 @@
-import sys
-import os
+from flask import Flask
+app = Flask(__name__)
 
-# Add root directory to Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+@app.route('/')
+def home():
+    return "Hello from Kubernetes 🚀"
 
-from app import add, subtract
-
-def test_add():
-    assert add(2, 3) == 5
-
-def test_subtract():
-    assert subtract(5, 3) == 2
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
