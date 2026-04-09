@@ -65,6 +65,18 @@ pipeline {
                 '''
             }
         }
+        stage('Test K8s') {
+    steps {
+        sh 'kubectl get nodes'
+    }
+}
+stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+        kubectl apply -f deployment.yaml --validate=false
+        '''
+    }
+}
 
     }
 }
