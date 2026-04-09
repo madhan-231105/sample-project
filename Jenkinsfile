@@ -42,41 +42,25 @@ pipeline {
             }
         }
 
-        // Optional (you commented correctly)
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t myapp:latest .'
             }
         }
 
+        stage('Test K8s') {
+            steps {
+                sh 'kubectl get nodes'
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                kubectl apply -f deployment.yaml
-                kubectl apply -f service.yaml
+                kubectl apply -f deployment.yaml --validate=false
                 '''
             }
         }
-        stage('Test K8s') {
-    steps {
-        sh 'kubectl get nodes'
-    }
-}
-stage('Deploy to Kubernetes') {
-    steps {
-        sh '''
-        kubectl apply -f deployment.yaml --validate=false
-        '''
-    }
-}
 
     }
 }
